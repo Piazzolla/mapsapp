@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SideMenuComponent } from "../../components/side-menu/side-menu.component";
 
+import * as mapboxgl from 'mapbox-gl'; // or "const mapboxgl = require('mapbox-gl');"
+
 @Component({
     standalone: true,
     templateUrl: './maps-layout.component.html',
@@ -25,6 +27,6 @@ import { SideMenuComponent } from "../../components/side-menu/side-menu.componen
         CommonModule,
         RouterModule,
         SideMenuComponent
-    ]
+    ],
 })
 export class MapsLayoutComponent { }
