@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
-import mapboxgl from 'mapbox-gl';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import mapboxgl, { LngLat } from 'mapbox-gl';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -45,16 +45,17 @@ import { environment } from '../../../../environments/environment';
     `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZoomRangePageComponent implements AfterViewInit {
+export class ZoomRangePageComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('map')
   public divMap?: ElementRef;
 
   public zoom: number = 10;
   public map?: mapboxgl.Map;
+  public currentLngLat: LngLat = new LngLat(-68.84454230018787, -32.88975864013289);
 
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(private cdRef: ChangeDetectorRef) { }
   ngAfterViewInit(): void {
 
     if (!this.divMap) throw 'HTML element not found';
@@ -63,27 +64,38 @@ export class ZoomRangePageComponent implements AfterViewInit {
       accessToken: environment.mapbox_key,
       container: this.divMap?.nativeElement, // container ID
       style: 'mapbox://styles/mapbox/streets-v12', // style URL
-      center: [-74.5, 40], // starting position [lng, lat]
+      center: this.currentLngLat, // starting position [lng, lat]
       zoom: this.zoom, // starting zoom
-    });
+      });
 
-    this.mapListeners();
-  }
+      this.mapListeners();
+      }
 
-  mapListeners() {
-    if( !this.map) throw 'Map not initialized';
+      ngOnDestroy(): void {
+        this.map?.remove();
+      }
+
+
+      mapListeners() {
+        if (!this.map) throw 'Map not initialized';
 
     this.map.on('zoom', (ev) => {
       this.zoom = this.map!.getZoom();
-//      this.cdRef.detectChanges();
       this.cdRef.markForCheck();
-    });
+      //      this.cdRef.detectChanges();
+      });
 
-    this.map.on('zoomend', (ev) => {
-      if(this.map!.getZoom() < 18) return;
-      this.map!.zoomTo(18)
-      this.cdRef.markForCheck();
-    });
+      this.map.on('zoomend', (ev) => {
+        if (this.map!.getZoom() < 18) return;
+        this.map!.zoomTo(18)
+        });
+
+        this.map.on('move', () => {
+          this.currentLngLat = this.map!.getCenter();
+          this.cdRef.markForCheck();
+    })
+
+
   }
 
   zoomIn() {
@@ -93,7 +105,7 @@ export class ZoomRangePageComponent implements AfterViewInit {
     this.map?.zoomOut();
   }
 
-  zoomChanged( value: string) {
+  zoomChanged(value: string) {
     this.zoom = Number(value);
     this.map?.zoomTo(this.zoom);
   }
