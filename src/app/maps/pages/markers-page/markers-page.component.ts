@@ -3,6 +3,11 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, E
 import mapboxgl, { LngLat, Marker } from 'mapbox-gl';
 import { environment } from '../../../../environments/environment';
 
+interface MarkerAndColor {
+  color: string;
+  marker: Marker;
+}
+
 @Component({
   selector: 'app-markers-page',
   standalone: true,
@@ -39,6 +44,8 @@ export class MarkersPageComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('map')
   public divMap?: ElementRef;
+
+  public markers: MarkerAndColor[] = [];
 
   public zoom: number = 13;
   public map?: mapboxgl.Map;
@@ -83,6 +90,13 @@ export class MarkersPageComponent implements AfterViewInit, OnDestroy {
       draggable: true
     }).setLngLat( lngLat)
       .addTo(this.map);
+
+    this.markers.push({color, marker});
+  }
+
+  deleteMarker(index: number) {
+    this.markers[index].marker.remove();
+    this.markers.splice(index, 1)
   }
 
 }
