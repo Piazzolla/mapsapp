@@ -22,7 +22,7 @@ import { environment } from '../../../../environments/environment';
 
     button {
       position: fixed;
-      bottom: 20px;
+      bottom: 30px;
       right: 20px;
     }
 
@@ -40,7 +40,7 @@ export class MarkersPageComponent implements AfterViewInit, OnDestroy {
   @ViewChild('map')
   public divMap?: ElementRef;
 
-  public zoom: number = 10;
+  public zoom: number = 13;
   public map?: mapboxgl.Map;
   public currentLngLat: LngLat = new LngLat(-68.84454230018787, -32.88975864013289);
 
@@ -65,6 +65,24 @@ export class MarkersPageComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.map?.remove();
+  }
+
+
+  createMarker() {
+
+    if(!this.map) return;
+    const color = '#xxxxxx'.replace(/x/g, y=>(Math.random()*16|0).toString(16));
+    const lngLat = this.map.getCenter();
+    this.addMarker( lngLat, color);
+  }
+
+  addMarker( lngLat: LngLat, color: string ) {
+    if(!this.map) return;
+    const marker = new Marker( {
+      color: color,
+      draggable: true
+    }).setLngLat( lngLat)
+      .addTo(this.map);
   }
 
 }

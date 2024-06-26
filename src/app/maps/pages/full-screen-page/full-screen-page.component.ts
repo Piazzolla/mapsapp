@@ -20,7 +20,7 @@ import * as mapboxgl from 'mapbox-gl'; // or "const mapboxgl = require('mapbox-g
       div {
         width: 100vw;
         height: 100vh;
-        // background-color: red;
+        /* background-color: red;*/
 
         }
         `,
