@@ -8,6 +8,11 @@ interface MarkerAndColor {
   marker: Marker;
 }
 
+interface PlainMarker {
+  color: string;
+  lngLat: number[];
+}
+
 @Component({
   selector: 'app-markers-page',
   standalone: true,
@@ -65,6 +70,8 @@ export class MarkersPageComponent implements AfterViewInit, OnDestroy {
       zoom: this.zoom, // starting zoom
       });
 
+      this.readFromLocalStorage();
+
       // const markerHtml = document.createElement('div');
       // markerHtml.innerHTML = 'Mariano'
       // const marker = new Marker({ element: markerHtml}).setLngLat(this.currentLngLat).addTo(this.map);
@@ -92,6 +99,7 @@ export class MarkersPageComponent implements AfterViewInit, OnDestroy {
       .addTo(this.map);
 
     this.markers.push({color, marker});
+    this.saveToLocalStorage();
   }
 
   deleteMarker(index: number) {
@@ -104,6 +112,29 @@ export class MarkersPageComponent implements AfterViewInit, OnDestroy {
       zoom: 14,
       center: marker.getLngLat()
     });
+  }
+
+  saveToLocalStorage() {
+    const plainMarkers: PlainMarker[] = this.markers.map(({color, marker}) => {
+      return {
+        color,
+        lngLat: marker.getLngLat().toArray()
+      }
+    });
+
+    localStorage.setItem('plainMarkers', JSON.stringify( plainMarkers ));
+  }
+
+  readFromLocalStorage() {
+    const plainMarkersString = localStorage.getItem('plainMarkers') ?? '[]';
+    const plainMarkers: PlainMarker[] = JSON.parse( plainMarkersString );
+
+    plainMarkers.forEach( ({ color, lngLat}) => {
+      const [ lng, lat ] = lngLat;
+      const coords = new LngLat(lng, lat)
+      this.addMarker(coords, color);
+    })
+
   }
 
 }
