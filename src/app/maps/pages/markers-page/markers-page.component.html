@@ -5,6 +5,7 @@
   @for (colorMarker of markers; track $index) {
     <li [ngStyle]="{ backgroundColor: colorMarker.color}"
     (dblclick)="deleteMarker($index)"
+    (click)="flyTo(colorMarker.marker)"
     class="list-group-item">
       Marker {{ $index + 1}}
     </li>
