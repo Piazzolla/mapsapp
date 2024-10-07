@@ -18,7 +18,7 @@ import * as mapboxgl from 'mapbox-gl'; // or "const mapboxgl = require('mapbox-g
       top: 20px;
       left: 20px;
       z-index: 999;
-      width: 180px;
+     /* width: 180px; */
 
     }
   `,
