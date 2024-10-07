@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
 
 import * as mapboxgl from 'mapbox-gl'; // or "const mapboxgl = require('mapbox-gl');"
+import { environment } from '../../../../environments/environment';
 
 //(mapboxgl as any).accessToken = 'pk.eyJ1IjoicGlhenpvbGxhMTIzIiwiYSI6ImNseDkyYjZ5bjJpZWoycXExYTZ3OG92Nm0ifQ.deybHs7sQ2ufl-JmE4gThg';
 
@@ -37,7 +38,7 @@ import * as mapboxgl from 'mapbox-gl'; // or "const mapboxgl = require('mapbox-g
     if(!this.divMap) throw 'HTML element not found';
 
     const map = new mapboxgl.Map({
-      accessToken: 'pk.eyJ1IjoicGlhenpvbGxhMTIzIiwiYSI6ImNseDkyYjZ5bjJpZWoycXExYTZ3OG92Nm0ifQ.deybHs7sQ2ufl-JmE4gThg',
+      accessToken: environment.mapbox_key,
       container: this.divMap?.nativeElement, // container ID
       style: 'mapbox://styles/mapbox/streets-v12', // style URL
       center: [-74.5, 40], // starting position [lng, lat]

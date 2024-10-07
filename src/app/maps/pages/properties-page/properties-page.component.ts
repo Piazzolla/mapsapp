@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MiniMapComponent } from "../../components/miniMap/miniMap.component";
 
 
 interface House {
@@ -14,7 +15,8 @@ interface House {
   standalone: true,
   imports: [
     CommonModule,
-  ],
+    MiniMapComponent
+],
   templateUrl: './properties-page.component.html',
   styles: `
     :host {
